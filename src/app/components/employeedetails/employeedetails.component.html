@@ -1,0 +1,105 @@
+<div class="col-md-12" *ngIf="!showEmployeeForm">
+    <h1 class="heading">Employee Portal</h1>
+    <div class="row">
+        <div class="col-md-12">
+            
+            <button class="btn btn-success" (click)="toggleEmployeeForm()">
+                Add Employee
+            </button>
+        </div>
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">Employee Id</th>
+                            <th scope="col">Employee Name</th>
+                            <th scope="col">Designation</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Date of Birth</th>
+                            <th scope="col">Salary</th>
+                            <th scope="col">Is Active</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let employee of employees">
+                           
+                            <td>{{employee.id}}</td>
+                            <td>{{employee.name}}</td>
+                            <td>{{employee.designation}}</td>
+                            <td>{{employee.email}}</td>
+                            <td>{{ employee.dateOfBirth | date:'dd-MM-yyyy' }}</td>
+                            <td>{{employee.salary}}</td>
+                            <td>{{employee.status ? "Active": "Inactive"}}</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" (click)="editEmployee(employee)">Edit</button>
+                                <button class="btn btn-danger btn-sm" (click)="deleteEmployee(employee.id)">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12" *ngIf="showEmployeeForm">
+    <h1 class="heading">Employee Details</h1>
+    <div class="card">
+        <div class="card-body">
+            <form [formGroup]="employeeForm">
+                <div class="form-group">
+                    <label for="id">Id</label>
+                    <input type="text" class="form-control" formControlName="id">
+                    <div *ngIf="employeeForm.get('id')?.hasError('required')">Employee Id is required.</div>
+                </div>
+                <div class="form-group">
+                    <label for="name">Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="name" required>
+                    <div *ngIf="employeeForm.get('name')?.hasError('required')">Name is required.</div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email <span class="text-danger">*</span></label>
+                    <input type="email" class="form-control" formControlName="email" required email>
+                    <div *ngIf="employeeForm.get('email')?.hasError('required')">Email is required.</div>
+                </div>
+                <div class="form-group">
+                    <label for="dateOfBirth">Date of Birth <span class="text-danger">*</span></label>
+                    <input type="date" class="form-control" formControlName="dateOfBirth" max="{{ maxDate() }}">
+                    <div *ngIf="employeeForm.get('dateOfBirth')?.hasError('required')">Date of Birth is required.</div>
+                </div>                
+                <div class="form-group">
+                    <label for="designation">Designation</label>
+                    <select class="form-control" formControlName="designation">
+                        <option>Software Engineer</option>
+                        <option>Web Devxeloper</option>
+                    </select>
+                    <div *ngIf="employeeForm.get('designation')?.hasError('required')">Designation is required.</div>
+                </div>
+                <div class="form-group">
+                    <label for="salary">Salary</label>
+                    <input type="number" class="form-control" formControlName="salary" pattern="[0-9]*">
+                    <div *ngIf="employeeForm.get('salary')?.hasError('required')">Salary is required.</div>
+                </div>
+                <div class="form-group">
+                    <label>Status</label><br>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="activeStatus" [value]="true" formControlName="status">
+                        <label class="form-check-label" for="activeStatus">Active</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="inactiveStatus" [value]="false" formControlName="status">
+                        <label class="form-check-label" for="inactiveStatus">Inactive</label>
+                    </div>
+                </div>
+                
+                <hr/>
+                <div class="btn-group">
+                <button class="btn btn-primary" type="button" (click)="saveEmployee()">Submit</button>
+                <button class="btn btn-danger mr-2" type="button" (click)="cancelForm()">Cancel</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
